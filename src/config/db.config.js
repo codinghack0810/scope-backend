@@ -2,12 +2,12 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const max = parseInt(process.env.DB_POOL_MAX)
+const max = parseInt(process.env.DB_POOL_MAX);
 const min = parseInt(process.env.DB_POOL_MIN);
 const acquire = parseInt(process.env.DB_POOL_ACQUIRE);
 const idle = parseInt(process.env.DB_POOL_IDLE);
 
-module.exports = {
+const config = {
   HOST: process.env.DB_HOST,
   USER: process.env.DB_USER,
   PASSWORD: process.env.DB_PASSWORD,
@@ -20,3 +20,5 @@ module.exports = {
     idle: idle,
   },
 };
+
+module.exports = config;
