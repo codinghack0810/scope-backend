@@ -7,19 +7,27 @@ module.exports = (sequelize, Sequelize) => {
     },
     email: {
       type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     password: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
     securityQuestion: {
       type: Sequelize.STRING,
+      allowNull: false,
     },
     securityAnswer: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
     logintracking: {
       type: Sequelize.BOOLEAN,
-      default: false,
+      defaultValue: false,
     },
   });
 
