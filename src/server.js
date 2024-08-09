@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 
 const db = require("./models");
-// const routes = require("./routes/api");
+const routes = require("./routes/api");
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.status(200).json("⏳ Server is running!");
 });
 
-// app.use("/api/v1", routes);
+app.use("/api/v1", routes);
 
 app.listen(PORT, HOST, () => {
   console.log(`⏳ Server is running on http://${HOST}:${PORT}`);
