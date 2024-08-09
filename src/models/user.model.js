@@ -3,18 +3,32 @@ module.exports = (sequelize, Sequelize) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      references: {
+        model: "user_accounts",
+        key: "id",
+      },
     },
     name: {
       type: Sequelize.STRING,
+      allowNull: false,
     },
     address: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
     contactinfo: {
       type: Sequelize.STRING,
+      allowNull: false,
     },
   });
+
+  User.associate = (models) => {
+    User.belongsTo(models.UserAccount, {
+      foreignKey: "id",
+      targetKey: "id",
+      onDelete: "CASCADE",
+    });
+  };
 
   return User;
 };
