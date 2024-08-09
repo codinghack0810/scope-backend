@@ -3,13 +3,12 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 
-const dbConnect = require("./config/db");
+const db = require("./models");
 // const routes = require("./routes/api");
 
 const app = express();
 
 dotenv.config();
-dbConnect();
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +17,10 @@ app.use(morgan("dev"));
 
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
+
+db.sequelize.sync().then(() => {
+  console.log("⏳ Database connected");
+});
 
 app.get("/", (req, res) => {
   res.status(200).json("⏳ Server is running!");
