@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 async function dbConnect() {
-  const connection = mysql.createConnection({
+  const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -12,12 +12,12 @@ async function dbConnect() {
   });
 
   // Connect to the MySQL database
-  connection.connect((err) => {
+  db.connect((err) => {
     if (err) {
       console.error("Error connecting to the database: " + err.stack);
       return;
     }
-    console.log("Connected to the database as ID " + connection.threadId);
+    console.log("Connected to the database as ID " + db.threadId);
   });
 }
 
