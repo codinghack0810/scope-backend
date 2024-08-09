@@ -80,7 +80,7 @@ const signin = async (req, res) => {
     // Check if the user exists
     const userAccount = await UserAccount.findOne({ where: { email } });
     if (!userAccount) {
-      return res.status(400).json({ msg: "User does not exist." });
+      return res.status(404).json({ msg: "User does not exist." });
     }
 
     // Check if the password is correct
