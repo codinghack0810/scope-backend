@@ -1,1 +1,1 @@
-# Education-Platform-Backend
+# MySQL with Express Backend
