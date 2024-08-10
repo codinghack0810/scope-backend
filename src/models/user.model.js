@@ -16,15 +16,25 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
       allowNull: false,
     },
-    contactinfo: {
+    // contactinfo: {
+    email: {
+      type: Sequelize.STRING,
+      primaryKey: true,
+      references: {
+        model: "user_accounts",
+        key: "email",
+      },
+    },
+    phone: {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    // }
   });
 
   User.associate = (models) => {
     User.belongsTo(models.UserAccount, {
-      foreignKey: "id",
+      foreignKey: "UserAccountId",
       targetKey: "id",
       onDelete: "CASCADE",
     });
