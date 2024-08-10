@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { parsePhoneNumberFromString } = require("libphonenumber-js/min");
 const db = require("../models");
 const User = db.user;
 const UserAccount = db.useraccount;
@@ -13,8 +14,15 @@ const test = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const { name, email, password, address, securityQuestion, securityAnswer } =
-      req.body;
+    const {
+      name,
+      email,
+      password,
+      address,
+      phone,
+      securityQuestion,
+      securityAnswer,
+    } = req.body;
 
     // Check if all fields are filled
     if (
@@ -22,11 +30,19 @@ const signup = async (req, res) => {
       !email ||
       !password ||
       !address ||
+      !phone ||
       !securityQuestion ||
       !securityAnswer
     ) {
       return res.status(400).json({ msg: "Please fill in all fields." });
     }
+
+    // Standardize the phone number
+    const phoneNumber = parsePhoneNumberFromString(phone, "US");
+    if (!phoneNumber || !phoneNumber.isValid()) {
+      return res.status(400).json({ msg: "Invalid phone number." });
+    }
+    const formattedNumber = phoneNumber.formatNational(); // or use `formatE164()` for E.164 format
 
     // Check if the user already exists
     const existingUser = await UserAccount.findOne({ where: { email } });
@@ -51,23 +67,12 @@ const signup = async (req, res) => {
       id: newUserAccount.id,
       name,
       address,
-      contactinfo: email,
+      email: newUserAccount.email,
+      phone: formattedNumber,
     });
-
-    // Remove the password and security question from the response
-    const {
-      password: _,
-      securityQuestion: __,
-      securityAnswer: ___,
-      ...newUserAccountWithoutPassword
-    } = newUserAccount.toJSON();
 
     // Respond with both created records
-    res.status(201).json({
-      msg: "Successfully signed up.",
-      newUserAccountWithoutPassword,
-      newUser,
-    });
+    res.status(201).json({ msg: "Successfully signed up." });
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -89,6 +94,8 @@ const signin = async (req, res) => {
       return res.status(400).json({ msg: "Password is incorrect." });
     }
 
+    const user = await User.findOne({ where: { email } });
+
     // Create JWT Payload
     const payload = {
       id: userAccount.id,
@@ -100,7 +107,7 @@ const signin = async (req, res) => {
       if (err) throw err;
       userAccount.logintracking = true;
       userAccount.save().then(() => {
-        res.status(200).json({ msg: "Successfully signed in.", token });
+        res.status(200).json({ msg: "Successfully signed in.", token, user });
       });
     });
   } catch (error) {
@@ -108,4 +115,20 @@ const signin = async (req, res) => {
   }
 };
 
-module.exports = { test, signup, signin };
+const signout = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const userAccount = await UserAccount.findOne({ where: { email } });
+    if (!userAccount) {
+      return res.status(404).json({ msg: "User does not exist." });
+    }
+    userAccount.logintracking = false;
+    userAccount.save().then(() => {
+      res.status(200).json({ msg: "Successfully signed out." });
+    });
+  } catch (error) {
+    res.status(400).json({ msg: error.message });
+  }
+};
+
+module.exports = { test, signup, signin, signout };

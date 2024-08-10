@@ -18,7 +18,7 @@ app.use(morgan("dev"));
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ force: true }).then(() => {
   console.log("⏳ Database connected");
 });
 
