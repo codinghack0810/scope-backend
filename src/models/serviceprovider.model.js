@@ -18,8 +18,8 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         servicesProvided: {
-            type: Sequelize.JSON,
-            allowNull: true,
+            type: Sequelize.TEXT,
+            allowNull: false,
         },
         contactInfo: {
             type: Sequelize.STRING,

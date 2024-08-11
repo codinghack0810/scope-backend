@@ -1,8 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { parsePhoneNumberFromString } = require("libphonenumber-js/min");
 const db = require("../models");
-const { where } = require("sequelize");
 const User = db.user;
 const UserAccount = db.useraccount;
 
