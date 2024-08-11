@@ -16,22 +16,22 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        contactInfo: {
-            type: Sequelize.JSON,
-            allowNull: true,
-            // email: {
-            //     type: Sequelize.STRING,
-            //     primaryKey: true,
-            //     references: {
-            //         model: "user_accounts",
-            //         key: "email",
-            //     },
-            // },
-            // phone: {
-            //     type: Sequelize.STRING,
-            //     allowNull: false,
-            // },
+        // contactInfo: {
+        //     type: Sequelize.JSON,
+        //     allowNull: true,
+        email: {
+            type: Sequelize.STRING,
+            primaryKey: true,
+            references: {
+                model: "user_accounts",
+                key: "email",
+            },
         },
+        phone: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        // },
     });
 
     return User;
