@@ -1,13 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("user", {
+    const ServiceProvider = sequelize.define("service_provider", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            references: {
-                model: "user_accounts",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            autoIncrement: true,
         },
         name: {
             type: Sequelize.STRING,
@@ -17,19 +13,19 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        // contactInfo: {
-        //     type: Sequelize.JSON,
-        //     allowNull: true,
-        email: {
+        areaOfOperation: {
+            type: Sequelize.TEXT,
+            allowNull: false,
+        },
+        servicesProvided: {
+            type: Sequelize.TEXT,
+            allowNull: false,
+        },
+        contactInfo: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        phone: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        // },
     });
 
-    return User;
+    return ServiceProvider;
 };
