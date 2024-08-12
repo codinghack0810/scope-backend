@@ -41,14 +41,10 @@ const signup = async (req, res) => {
             return res.status(400).json({ msg: "User already exists." });
         }
 
-        // Hash the password
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
-
         // Create the user account
         const newUserAccount = await UserAccount.create({
             email,
-            password: hashedPassword,
+            password,
             securityQuestion,
             securityAnswer,
         });
@@ -58,7 +54,8 @@ const signup = async (req, res) => {
             id: newUserAccount.id,
             name,
             address,
-            contactInfo: [{ email: newUserAccount.email }, { phone }],
+            email: newUserAccount.email,
+            phone,
         });
 
         // Respond with both created records
@@ -95,10 +92,11 @@ const signin = async (req, res) => {
             email: userAccount.email,
         };
 
+        userAccount.loginTracking = true;
+
         // Sign Token
         jwt.sign(payload, SecurityOfKey, (err, token) => {
             if (err) throw err;
-            userAccount.logintracking = true;
             userAccount.save().then(() => {
                 res.status(200).json({
                     msg: "Successfully signed in.",
@@ -128,4 +126,50 @@ const signout = async (req, res) => {
     }
 };
 
-module.exports = { test, signup, signin, signout };
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            name,
+            email,
+            password,
+            address,
+            phone,
+            securityQuestion,
+            securityAnswer,
+        } = req.body;
+
+        // Check if the user exists
+        const userAccount = await UserAccount.findOne({ where: { id } });
+        if (!userAccount) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
+
+        // Prepare the update object
+        const updateData = {};
+        if (email) updateData.email = email;
+        if (password) updateData.password = await bcrypt.hash(password, 10);
+        if (securityQuestion) updateData.securityQuestion = securityQuestion;
+        if (securityAnswer) updateData.securityAnswer = securityAnswer;
+
+        // Update the userAccount
+        await UserAccount.update(updateData, { where: { id } });
+
+        // Update the user
+        const userUpdateData = {};
+        if (name) userUpdateData.name = name;
+        if (address) userUpdateData.address = address;
+        if (email) userUpdateData.email = email; // Use the new email
+        if (phone) userUpdateData.phone = phone;
+
+        await User.update(userUpdateData, { where: { id } });
+
+        const updatedUser = await User.findOne({ where: { id } });
+
+        res.status(200).json({ msg: "Successfully updated.", updatedUser });
+    } catch (error) {
+        res.status(400).json({ msg: error.message });
+    }
+};
+
+module.exports = { test, signup, signin, signout, updateUser };
