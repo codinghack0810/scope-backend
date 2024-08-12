@@ -40,7 +40,7 @@ const signup = async (req, res) => {
         });
         res.status(200).json({ msg: "ServiceProvider created successfully.", newService });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 

@@ -63,7 +63,7 @@ const signup = async (req, res) => {
         // Respond with both created records
         res.status(201).json({ msg: "Successfully signed up." });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 
@@ -108,7 +108,7 @@ const signin = async (req, res) => {
             });
         });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 
@@ -124,7 +124,7 @@ const signout = async (req, res) => {
             res.status(200).json({ msg: "Successfully signed out." });
         });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 
@@ -144,6 +144,8 @@ const updateUser = async (req, res) => {
 
         // Check if the user exists
         const userAccount = await UserAccount.findOne({ where: { id } });
+        console.log(userAccount);
+        
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
@@ -171,7 +173,7 @@ const updateUser = async (req, res) => {
 
         res.status(200).json({ msg: "Successfully updated.", updatedUser });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 
@@ -196,7 +198,7 @@ const search = async (req, res) => {
             searchedService,
         });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(500).json({ msg: error.message });
     }
 };
 
