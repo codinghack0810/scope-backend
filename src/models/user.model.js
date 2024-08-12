@@ -21,11 +21,7 @@ module.exports = (sequelize, Sequelize) => {
         //     allowNull: true,
         email: {
             type: Sequelize.STRING,
-            primaryKey: true,
-            references: {
-                model: "user_accounts",
-                key: "email",
-            },
+            allowNull: false,
         },
         phone: {
             type: Sequelize.STRING,

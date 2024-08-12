@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 module.exports = (sequelize, Sequelize) => {
     const UserAccount = sequelize.define("user_account", {
         id: {
@@ -7,7 +9,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         email: {
             type: Sequelize.STRING,
-            primaryKey: true,
             allowNull: false,
             unique: true,
             validate: {
@@ -30,6 +31,26 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
+    });
+
+    UserAccount.beforeCreate(async (userAccount, options) => {
+        if (userAccount.password) {
+            const salt = await bcrypt.genSalt(10);
+            userAccount.password = await bcrypt.hash(
+                userAccount.password,
+                salt
+            );
+        }
+    });
+
+    UserAccount.beforeUpdate(async (userAccount, options) => {
+        if (userAccount.password) {
+            const salt = await bcrypt.genSalt(10);
+            userAccount.password = await bcrypt.hash(
+                userAccount.password,
+                salt
+            );
+        }
     });
 
     return UserAccount;

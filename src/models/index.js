@@ -26,5 +26,8 @@ db.serviceprovider = require("./serviceprovider.model.js")(
     sequelize,
     Sequelize
 );
+db.profile = require("./profile.model.js")(sequelize, Sequelize);
+db.review = require("./review.model.js")(sequelize, Sequelize);
+db.transaction = require("./transaction.model.js")(sequelize, Sequelize);
 
 module.exports = db;
