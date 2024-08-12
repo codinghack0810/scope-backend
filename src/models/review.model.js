@@ -7,9 +7,10 @@ module.exports = (sequelize, Sequelize) => {
         user: {
             type: Sequelize.INTEGER,
             references: {
-                model: "users",
+                model: "user_accounts",
                 key: "id",
             },
+            onDelete: "CASCADE",
         },
         userRating: {
             type: Sequelize.INTEGER,
@@ -25,6 +26,7 @@ module.exports = (sequelize, Sequelize) => {
                 model: "service_providers",
                 key: "id",
             },
+            onDelete: "CASCADE",
         },
         serviceRating: {
             type: Sequelize.INTEGER,

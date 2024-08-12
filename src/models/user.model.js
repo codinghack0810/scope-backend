@@ -7,6 +7,7 @@ module.exports = (sequelize, Sequelize) => {
                 model: "user_accounts",
                 key: "id",
             },
+            onDelete: "CASCADE",
         },
         name: {
             type: Sequelize.STRING,

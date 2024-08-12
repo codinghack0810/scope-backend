@@ -6,5 +6,6 @@ router.post("/signup", userController.signup);
 router.post("/signin", userController.signin);
 router.post("/signout", userController.signout);
 router.put("/updateuser/:id", userController.updateUser);
+router.get("/search/:key", userController.search);
 
 module.exports = router;
