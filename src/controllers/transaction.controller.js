@@ -110,6 +110,7 @@ const paid = async (req, res) => {
             return res.status(404).json({ msg: "Transaction not found." });
         }
         
+        // Check if transaction is paid
         if (transaction.status) {
             return res.status(400).json({ msg: "Transaction already paid." });
         }
