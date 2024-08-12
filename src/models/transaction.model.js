@@ -16,10 +16,11 @@ module.exports = (sequelize, Sequelize) => {
         user: {
             type: Sequelize.INTEGER,
             references: {
-                model: "users",
+                model: "user_accounts",
                 key: "id",
             },
             allowNull: false,
+            onDelete: "CASCADE",
         },
         service: {
             type: Sequelize.INTEGER,
@@ -28,6 +29,7 @@ module.exports = (sequelize, Sequelize) => {
                 key: "id",
             },
             allowNull: false,
+            onDelete: "CASCADE",
         },
         status: {
             type: Sequelize.BOOLEAN,

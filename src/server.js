@@ -18,9 +18,12 @@ app.use(morgan("dev"));
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync().then(() => {
     console.log("⏳ Database connected");
 });
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("⏳ Database connected");
+// });
 
 app.get("/", (req, res) => {
     res.status(200).json("⏳ Server is running!");

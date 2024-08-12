@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Op = require("sequelize").Op;
 const db = require("../models");
 const User = db.user;
 const UserAccount = db.useraccount;
+const ServiceProvider = db.serviceprovider;
 
 const SecurityOfKey = process.env.JWT_ACCESS_TOKEN_SECRET_PRIVATE;
 // const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES;
@@ -129,6 +131,7 @@ const signout = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
+
         const {
             name,
             email,
@@ -172,4 +175,29 @@ const updateUser = async (req, res) => {
     }
 };
 
-module.exports = { test, signup, signin, signout, updateUser };
+const search = async (req, res) => {
+    try {
+        const { key } = req.params;
+
+        const searchedService = await ServiceProvider.findAll({
+            where: {
+                servicesProvided: {
+                    [Op.like]: `%${key}%`,
+                },
+            },
+        });
+
+        if (!searchedService) {
+            return res.status(404).json({ msg: "No service found." });
+        }
+
+        res.status(200).json({
+            msg: "Successfully searched.",
+            searchedService,
+        });
+    } catch (error) {
+        res.status(400).json({ msg: error.message });
+    }
+};
+
+module.exports = { test, signup, signin, signout, updateUser, search };

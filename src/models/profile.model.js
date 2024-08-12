@@ -6,13 +6,15 @@ module.exports = (sequelize, Sequelize) => {
                 model: "service_providers",
                 key: "id",
             },
+            onDelete: "CASCADE",
         },
         user: {
             type: Sequelize.INTEGER,
             references: {
-                model: "users",
+                model: "user_accounts",
                 key: "id",
             },
+            onDelete: "CASCADE",
         },
         rating: {
             type: Sequelize.INTEGER,
