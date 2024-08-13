@@ -143,11 +143,15 @@ const updateUser = async (req, res) => {
         } = req.body;
 
         // Check if the user exists
-        const userAccount = await UserAccount.findOne({ where: { id } });
-        console.log(userAccount);
-        
+        const userAccount = await UserAccount.findOne({ where: { id } });        
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
+        }
+
+        // Check if the email is already taken
+        const emailTaken = await UserAccount.findOne({ where: { email } });
+        if (emailTaken && emailTaken.id !== id) {
+            return res.status(400).json({ msg: "Email is already taken." });
         }
 
         // Prepare the update object
