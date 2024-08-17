@@ -16,22 +16,16 @@ const test = async (req, res) => {
 const signup = async (req, res) => {
     try {
         const {
-            name,
             email,
             password,
-            address,
-            phone,
             securityQuestion,
             securityAnswer,
         } = req.body;
 
         // Check if all fields are filled
         if (
-            !name ||
             !email ||
             !password ||
-            !address ||
-            !phone ||
             !securityQuestion ||
             !securityAnswer
         ) {
@@ -54,10 +48,7 @@ const signup = async (req, res) => {
         // Create the user
         const newUser = await User.create({
             id: newUserAccount.id,
-            name,
-            address,
             email: newUserAccount.email,
-            phone,
         });
 
         // Respond with both created records
