@@ -33,7 +33,4 @@ module.exports = async (req, res, next) => {
     } catch (error) {
         console.error("Something wrong with auth middleware.", error);
     }
-  } catch (error) {
-    console.error("Something wrong with auth middleware.", error);
-  }
 };
