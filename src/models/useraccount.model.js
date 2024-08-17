@@ -27,10 +27,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        isFirst:{
-            type: Sequelize.BOOLEAN,
-            defaultValue: true,
-        },
         loginTracking: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
@@ -46,6 +42,6 @@ module.exports = (sequelize, Sequelize) => {
             );
         }
     });
-
+  
     return UserAccount;
 };

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const db = require("../models");
-const UserAccount = db.useraccount;
+
+const User = require("../models/User");
 
 dotenv.config();
 const secretOrKey = process.env.JWT_ACCESS_TOKEN_SECRET_PRIVATE;
@@ -33,4 +33,7 @@ module.exports = async (req, res, next) => {
     } catch (error) {
         console.error("Something wrong with auth middleware.", error);
     }
+  } catch (error) {
+    console.error("Something wrong with auth middleware.", error);
+  }
 };
