@@ -16,22 +16,22 @@ const test = async (req, res) => {
 const signup = async (req, res) => {
     try {
         const {
-            name,
+            // name,
             email,
             password,
-            address,
-            phone,
+            // address1,
+            // phone,
             securityQuestion,
             securityAnswer,
         } = req.body;
 
         // Check if all fields are filled
         if (
-            !name ||
+            // !name ||
             !email ||
             !password ||
-            !address ||
-            !phone ||
+            // !address1 ||
+            // !phone ||
             !securityQuestion ||
             !securityAnswer
         ) {
@@ -54,10 +54,10 @@ const signup = async (req, res) => {
         // Create the user
         const newUser = await User.create({
             id: newUserAccount.id,
-            name,
-            address,
+            // name,
+            // address1,
             email: newUserAccount.email,
-            phone,
+            // phone,
         });
 
         // Respond with both created records
@@ -95,6 +95,7 @@ const signin = async (req, res) => {
         };
 
         userAccount.loginTracking = true;
+        const isFirst = await userAccount.isFirst;
 
         // Sign Token
         jwt.sign(payload, SecurityOfKey, (err, token) => {
@@ -104,6 +105,7 @@ const signin = async (req, res) => {
                     msg: "Successfully signed in.",
                     token,
                     user,
+                    isFirst,
                 });
             });
         });
@@ -114,12 +116,15 @@ const signin = async (req, res) => {
 
 const signout = async (req, res) => {
     try {
-        const { email } = req.body;
-        const userAccount = await UserAccount.findOne({ where: { email } });
+        const email = req.user.email;
+
+        const userAccount = await UserAccount.findOne({
+            where: { email: email },
+        });
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
-        userAccount.logintracking = false;
+        userAccount.loginTracking = false;
         userAccount.save().then(() => {
             res.status(200).json({ msg: "Successfully signed out." });
         });
@@ -133,17 +138,23 @@ const updateUser = async (req, res) => {
         const { id } = req.params;
 
         const {
-            name,
+            firstName,
+            lastName,
             email,
             password,
-            address,
-            phone,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            phone1,
+            phone2,
             securityQuestion,
             securityAnswer,
         } = req.body;
 
         // Check if the user exists
-        const userAccount = await UserAccount.findOne({ where: { id } });        
+        const userAccount = await UserAccount.findOne({ where: { id } });
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
@@ -166,16 +177,69 @@ const updateUser = async (req, res) => {
 
         // Update the user
         const userUpdateData = {};
-        if (name) userUpdateData.name = name;
-        if (address) userUpdateData.address = address;
+        if (firstName) userUpdateData.firstName = firstName;
+        if (lastName) userUpdateData.lastName = lastName;
         if (email) userUpdateData.email = email; // Use the new email
-        if (phone) userUpdateData.phone = phone;
+        if (address1) userUpdateData.address1 = address1;
+        if (address2) userUpdateData.address2 = address2;
+        if (city) userUpdateData.city = city;
+        if (state) userUpdateData.state = state;
+        if (zip) userUpdateData.zip = zip;
+        if (phone1) userUpdateData.phone1 = phone1;
+        if (phone2) userUpdateData.phone2 = phone2;
 
         await User.update(userUpdateData, { where: { id } });
 
         const updatedUser = await User.findOne({ where: { id } });
 
         res.status(200).json({ msg: "Successfully updated.", updatedUser });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
+
+const fillUser = async (req, res) => {
+    try {
+        const {
+            email,
+            firstName,
+            lastName,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            phone1,
+            phone2,
+        } = req.body;
+
+        const userAccount = await UserAccount.findOne({ where: { email } });
+        if (!userAccount) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
+
+        // Fill the user
+        const userUpdateData = {};
+        if (firstName) userUpdateData.firstName = firstName;
+        if (lastName) userUpdateData.lastName = lastName;
+        if (address1) userUpdateData.address1 = address1;
+        if (address2) userUpdateData.address2 = address2;
+        if (city) userUpdateData.city = city;
+        if (state) userUpdateData.state = state;
+        if (zip) userUpdateData.zip = zip;
+        if (phone1) userUpdateData.phone1 = phone1;
+        if (phone2) userUpdateData.phone2 = phone2;
+
+        await User.update(userUpdateData, { where: { email } });
+
+        if (userAccount.isFirst) {
+            userAccount.isFirst = false;
+            await userAccount.save();
+        }
+
+        const filledUser = await User.findOne({ where: { email } });
+
+        res.status(200).json({ msg: "Successfully filled.", filledUser });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -206,4 +270,12 @@ const search = async (req, res) => {
     }
 };
 
-module.exports = { test, signup, signin, signout, updateUser, search };
+module.exports = {
+    test,
+    signup,
+    signin,
+    signout,
+    fillUser,
+    updateUser,
+    search,
+};
