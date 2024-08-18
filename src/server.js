@@ -21,8 +21,9 @@ const HOST = process.env.HOST;
 db.sequelize.sync().then(() => {
     console.log("⏳ Database connected");
 });
+
 // db.sequelize.sync({ force: true }).then(() => {
-//     console.log("⏳ Database connected");
+//     console.log("⏳ New Database connected");
 // });
 
 app.get("/", (req, res) => {

@@ -27,23 +27,21 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
+        isFirst: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
+        },
         loginTracking: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
+        active: {
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
+        },
     });
 
     UserAccount.beforeCreate(async (userAccount, options) => {
-        if (userAccount.password) {
-            const salt = await bcrypt.genSalt(10);
-            userAccount.password = await bcrypt.hash(
-                userAccount.password,
-                salt
-            );
-        }
-    });
-
-    UserAccount.beforeUpdate(async (userAccount, options) => {
         if (userAccount.password) {
             const salt = await bcrypt.genSalt(10);
             userAccount.password = await bcrypt.hash(
