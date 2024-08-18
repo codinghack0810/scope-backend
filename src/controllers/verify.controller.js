@@ -37,7 +37,7 @@ const sendCode = async (req, res) => {
             },
         });
         const mailOptions = {
-            from: `${process.env.APP_NAME} <${process.env.EMAIL}>`,
+            from: `${process.env.APP_NAME} <${process.env.EMAIL_FROM}>`,
             to: email,
             subject: `Verify code`,
             text: "code",
