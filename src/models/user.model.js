@@ -9,45 +9,45 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: "CASCADE",
         },
+        firstName: {
+            type: Sequelize.STRING,
+            defaultValue: "",
+        },
+        lastName: {
+            type: Sequelize.STRING,
+            defaultValue: "",
+        },
         email: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        firstName: {
-            type: Sequelize.STRING,
-            allowNull: true,
-        },
-        lastName: {
-            type: Sequelize.STRING,
-            allowNull: true,
-        },
         address1: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
         address2: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
-        city: {
-            type: Sequelize.TEXT,
-            allowNull: true,
+        city:{
+            type: Sequelize.STRING,
+            defaultValue: "",
         },
         state: {
-            type: Sequelize.TEXT,
-            allowNull: true,
-        },
-        zip:{
             type: Sequelize.STRING,
-            allowNull: true,
+            defaultValue: "",
+        },
+        zip: {
+            type: Sequelize.STRING,
+            defaultValue: "",
         },
         phone1: {
             type: Sequelize.STRING,
-            allowNull: true,
+            defaultValue: "",
         },
         phone2: {
             type: Sequelize.STRING,
-            allowNull: true,
+            defaultValue: "",
         },
     });
 
