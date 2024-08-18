@@ -77,6 +77,10 @@ const signin = async (req, res) => {
             return res.status(404).json({ msg: "User does not exist." });
         }
 
+        if (userAccount.loginTracking) {
+            return res.status(400).json({ msg: "User is already logged in." });
+        }
+
         // Check if the password is correct
         const passwordMatch = bcrypt.compareSync(
             password,
