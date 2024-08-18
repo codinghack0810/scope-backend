@@ -22,10 +22,15 @@ const sendCode = async (req, res) => {
         // Send email
         const transporter = nodemailer.createTransport({
             service: "gmail",
+            // host: "smtp.gmail.com",
+            // port: 587,
+            // secure: false, // true for 465, false for other ports
             auth: {
                 user: process.env.EMAIL,
                 pass: process.env.PASSWORD,
             },
+            logger: true, // log information about the transport
+            debug: true, // include debug output
         });
         const mailOptions = {
             from: process.env.EMAIL,
@@ -38,7 +43,7 @@ const sendCode = async (req, res) => {
                 console.log(error);
                 res.status(500).json({ msg: error.message });
             } else {
-                res.status(200).json({ msg: "Code sent." });
+                res.status(200).json({ msg: "Code sent.", code: code });
             }
         });
     } catch (error) {
@@ -53,16 +58,23 @@ const verifyCode = async (req, res) => {
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
+        if (userAccount.active === 0) {
+            return res
+                .status(400)
+                .json({ msg: "Don't send code. Please resend." });
+        }
         if (userAccount.active === code) {
             userAccount.active = 1;
             await userAccount.save();
             res.status(200).json({ msg: "Email verified." });
         } else {
+            userAccount.active = 0;
+            await userAccount.save();
             res.status(400).json({ msg: "Invalid code." });
         }
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
-}
+};
 
-module.exports = { sendCode };
+module.exports = { sendCode, verifyCode };

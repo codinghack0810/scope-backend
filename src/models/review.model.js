@@ -14,11 +14,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         userRating: {
             type: Sequelize.INTEGER,
-            allowNull: true,
+            defaultValue: 0,
         },
         userComment: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
         service: {
             type: Sequelize.INTEGER,
@@ -30,11 +30,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         serviceRating: {
             type: Sequelize.INTEGER,
-            allowNull: true,
+            defaultValue: 0,
         },
         serviceComment: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
     });
 
