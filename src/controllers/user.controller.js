@@ -16,6 +16,8 @@ const test = async (req, res) => {
 const signup = async (req, res) => {
     try {
         const {
+            firstName,
+            lastName,
             email,
             password,
             address1,
@@ -49,6 +51,8 @@ const signup = async (req, res) => {
         await User.create({
             id: newUserAccount.id,
             email: newUserAccount.email,
+            firstName,
+            lastName,
             address1,
             city,
             state,
