@@ -18,12 +18,10 @@ const sendCode = async (req, res) => {
 
         // Check if the user is already verified
         if (userAccount.active == 1) {
-            return res
-                .status(400)
-                .json({ msg: "User is already verified." });
+            return res.status(400).json({ msg: "User is already verified." });
         }
 
-        // Generate code      
+        // Generate code
         const code = Math.floor(100000 + Math.random() * 900000);
         userAccount.active = code;
         await userAccount.save();
@@ -72,9 +70,7 @@ const verifyCode = async (req, res) => {
 
         // Check if the user is already verified
         if (userAccount.active == 1) {
-            return res
-                .status(400)
-                .json({ msg: "User is already verified." });
+            return res.status(400).json({ msg: "User is already verified." });
         }
 
         if (userAccount.active == 0) {
