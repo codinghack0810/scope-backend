@@ -26,11 +26,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         userFeedback: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
         serviceFeedback: {
             type: Sequelize.TEXT,
-            allowNull: true,
+            defaultValue: "",
         },
     });
 
