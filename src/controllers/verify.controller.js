@@ -33,7 +33,7 @@ const sendCode = async (req, res) => {
             debug: true, // include debug output
         });
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: process.env.EMAIL_FROM,
             to: email,
             subject: "Verify your email",
             text: `Your verification code is ${code}`,
@@ -58,12 +58,12 @@ const verifyCode = async (req, res) => {
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
-        if (userAccount.active === 0) {
+        if (userAccount.active == 0) {
             return res
                 .status(400)
                 .json({ msg: "Don't send code. Please resend." });
         }
-        if (userAccount.active === code) {
+        if (userAccount.active == code) {
             userAccount.active = 1;
             await userAccount.save();
             res.status(200).json({ msg: "Email verified." });
