@@ -11,6 +11,6 @@ router.put("/verify", verifyController.verifyCode);
 router.post("/signin", requiredVerify, userController.signin);
 router.post("/signout", requireAuth, userController.signout);
 router.put("/data", requireAuth, userController.updateUser);
-router.get("/search/:key", requireAuth, userController.search);
+router.get("/search", requireAuth, userController.search);
 
 module.exports = router;
