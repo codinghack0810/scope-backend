@@ -84,10 +84,14 @@ const deleteTrans = async (req, res) => {
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { user: userId, service: serviceId, status: false },
+            where: { user: userId, service: serviceId },
         });
         if (!transaction) {
-            return res.status(404).json({ msg: "Transaction not found or already paid." });
+            return res.status(404).json({ msg: "Transaction not found." });
+        }
+
+        if(transaction.status) {
+            return res.status(400).json({ msg: "Transaction already paid." });
         }
 
         // Delete transaction

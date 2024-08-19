@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
         // Check if the user exists
         const userAccount = await UserAccount.findOne({ where: { email } });
         if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
+            return res.status(404).json({ msg: "User does not exist. Please signed up." });
         }
 
         // Check if the user is already verified

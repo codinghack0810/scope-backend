@@ -11,11 +11,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         firstName: {
             type: Sequelize.STRING,
-            defaultValue: "",
+            allowNull: false,
         },
         lastName: {
             type: Sequelize.STRING,
-            defaultValue: "",
+            allowNull: false,
         },
         email: {
             type: Sequelize.STRING,
@@ -23,19 +23,19 @@ module.exports = (sequelize, Sequelize) => {
         },
         address1: {
             type: Sequelize.TEXT,
-            defaultValue: "",
+            allowNull: false,
         },
         address2: {
             type: Sequelize.TEXT,
             defaultValue: "",
         },
-        city:{
+        city: {
             type: Sequelize.STRING,
-            defaultValue: "",
+            allowNull: false,
         },
         state: {
             type: Sequelize.STRING,
-            defaultValue: "",
+            allowNull: false,
         },
         zip: {
             type: Sequelize.STRING,
@@ -43,9 +43,13 @@ module.exports = (sequelize, Sequelize) => {
         },
         phone1: {
             type: Sequelize.STRING,
-            defaultValue: "",
+            allowNull: false,
         },
         phone2: {
+            type: Sequelize.STRING,
+            defaultValue: "",
+        },
+        property_size: {
             type: Sequelize.STRING,
             defaultValue: "",
         },

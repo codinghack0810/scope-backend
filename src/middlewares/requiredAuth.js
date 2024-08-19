@@ -9,9 +9,7 @@ const secretOrKey = process.env.JWT_ACCESS_TOKEN_SECRET_PRIVATE;
 module.exports = async (req, res, next) => {
     try {
         if (!req.headers.authorization) {
-            return res
-                .status(401)
-                .json({ msg: "No authentication." });
+            return res.status(401).json({ msg: "No authentication." });
         }
         const token = req.headers.authorization;
         if (!token) {
@@ -25,10 +23,15 @@ module.exports = async (req, res, next) => {
             }
 
             const userAccount = await UserAccount.findOne({
-                where: { id: decoded.id },
+                where: { email: decoded.email },
             });
+
+            if (!userAccount) {
+                return res.status(404).json({ msg: "User does not exist." });
+            }
+
             req.user = userAccount;
-            next();
+            await next();
         });
     } catch (error) {
         console.error("Something wrong with auth middleware.", error);
