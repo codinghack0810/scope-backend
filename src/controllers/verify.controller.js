@@ -13,7 +13,7 @@ const sendCode = async (req, res) => {
 
         // Check if the user exists
         if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
+            return res.status(404).json({ msg: "User did not signup." });
         }
 
         // Check if the user is already verified
@@ -61,11 +61,12 @@ const sendCode = async (req, res) => {
 const verifyCode = async (req, res) => {
     try {
         const { email, code } = req.body;
+
         const userAccount = await UserAccount.findOne({ where: { email } });
 
         // Check if the user exists
         if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
+            return res.status(404).json({ msg: "User did not signup." });
         }
 
         // Check if the user is already verified

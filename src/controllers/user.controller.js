@@ -36,7 +36,13 @@ const signup = async (req, res) => {
 
         const userAccount = await UserAccount.findOne({ where: { email } });
         if (userAccount) {
-            return res.status(400).json({ msg: "User already exists." });
+            if (userAccount.active !== 1) {
+                return res
+                    .status(400)
+                    .json({ msg: "User is not verified. Please verify." });
+            } else {
+                return res.status(400).json({ msg: "User already exists." });
+            }
         }
 
         // Create the user account
