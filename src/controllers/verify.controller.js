@@ -13,7 +13,7 @@ const sendCode = async (req, res) => {
 
         // Check if the user exists
         if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
+            return res.status(404).json({ msg: "User did not signup. Please signup." });
         }
 
         // Check if the user is already verified
@@ -61,11 +61,14 @@ const sendCode = async (req, res) => {
 const verifyCode = async (req, res) => {
     try {
         const { email, code } = req.body;
+
         const userAccount = await UserAccount.findOne({ where: { email } });
 
         // Check if the user exists
         if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
+            return res
+                .status(404)
+                .json({ msg: "User did not signup. Please signup." });
         }
 
         // Check if the user is already verified
@@ -76,16 +79,16 @@ const verifyCode = async (req, res) => {
         if (userAccount.active == 0) {
             return res
                 .status(400)
-                .json({ msg: "Don't send code. Please resend." });
+                .json({ msg: "Please resend." });
         }
         if (userAccount.active == code) {
             userAccount.active = 1;
             await userAccount.save();
-            res.status(200).json({ msg: "Email verified." });
+            res.status(200).json({ msg: "User verified. Please sign in" });
         } else {
             userAccount.active = 0;
             await userAccount.save();
-            res.status(400).json({ msg: "Invalid code." });
+            res.status(400).json({ msg: "Invalid code. Please resend." });
         }
     } catch (error) {
         res.status(500).json({ msg: error.message });

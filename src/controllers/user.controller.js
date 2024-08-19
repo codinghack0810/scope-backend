@@ -29,14 +29,15 @@ const signup = async (req, res) => {
             securityAnswer,
         } = req.body;
 
-        // Check if all fields are filled
-        if (!email || !password || !securityQuestion || !securityAnswer) {
-            return res.status(400).json({ msg: "Please fill in all fields." });
-        }
-
         const userAccount = await UserAccount.findOne({ where: { email } });
         if (userAccount) {
-            return res.status(400).json({ msg: "User already exists." });
+            if (userAccount.active !== 1) {
+                return res
+                    .status(400)
+                    .json({ msg: "User is not verified. Please verify." });
+            } else {
+                return res.status(400).json({ msg: "User already exists." });
+            }
         }
 
         // Create the user account
@@ -61,7 +62,7 @@ const signup = async (req, res) => {
         });
 
         // Respond with both created records
-        res.status(201).json({ msg: "Successfully signed up." });
+        res.status(201).json({ msg: "Successfully signed up. Please verify." });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -76,6 +77,11 @@ const signin = async (req, res) => {
         if (!userAccount) {
             return res.status(404).json({ msg: "User does not exist." });
         }
+
+        // Check if the user is already logged in
+        // if (userAccount.loginTracking) {
+        //     return res.status(400).json({ msg: "User is already logged in." });
+        // }
 
         // Check if the password is correct
         const passwordMatch = bcrypt.compareSync(
@@ -121,18 +127,9 @@ const signin = async (req, res) => {
 
 const signout = async (req, res) => {
     try {
-        const email = req.user.email;
-        console.log("user => ", req.user);
-        console.log("email => ", email);
-
-        const userAccount = await UserAccount.findOne({
-            where: { email: email },
-        });
-        if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
-        }
+        const userAccount = req.user;
         userAccount.loginTracking = false;
-        userAccount.save().then(() => {
+        await userAccount.save().then(() => {
             res.status(200).json({ msg: "Successfully signed out." });
         });
     } catch (error) {
@@ -142,12 +139,13 @@ const signout = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const id = req.user.id;
+        const userAccount = req.user;
+        const { id } = userAccount;
 
         const {
             firstName,
             lastName,
-            email,
+            // email,
             address1,
             address2,
             phone1,
@@ -159,30 +157,24 @@ const updateUser = async (req, res) => {
             securityAnswer,
         } = req.body;
 
-        // Check if the user exists
-        const userAccount = await UserAccount.findOne({ where: { id: id } });
-        if (!userAccount) {
-            return res.status(404).json({ msg: "User does not exist." });
-        }
-
-        if (email) {
-            // Check if the email is already taken
-            const emailTaken = await UserAccount.findOne({
-                where: { email },
-            });
-            if (emailTaken && emailTaken.id !== id) {
-                return res.status(400).json({ msg: "Email is already taken." });
-            }
-        }
+        // if (email) {
+        //     // Check if the email is already taken
+        //     const emailTaken = await UserAccount.findOne({
+        //         where: { email },
+        //     });
+        //     if (emailTaken && emailTaken.id !== id) {
+        //         return res.status(400).json({ msg: "Email is already taken." });
+        //     }
+        // }
 
         // Update the userAccount
         await UserAccount.update(
             {
-                email,
+                // email,
                 securityQuestion,
                 securityAnswer,
             },
-            { where: { id: id } }
+            { where: { id } }
         );
 
         userAccount.isFirst = false;
@@ -193,49 +185,7 @@ const updateUser = async (req, res) => {
             {
                 firstName,
                 lastName,
-                email,
-                address1,
-                address2,
-                phone1,
-                phone2,
-                city,
-                state,
-                zip,
-            },
-            { where: { id: id } }
-        );
-
-        const updatedUser = await User.findOne({ where: { id: id } });
-
-        res.status(200).json({ msg: "Successfully.", updatedUser });
-    } catch (error) {
-        res.status(500).json({ msg: error.message });
-    }
-};
-
-const fillUser = async (req, res) => {
-    try {
-        const { id } = req.user.id;
-        const {
-            firstName,
-            lastName,
-            address1,
-            address2,
-            phone1,
-            phone2,
-            city,
-            state,
-            zip,
-        } = req.body;
-        const user = await User.findOne({ where: { id } });
-        if (!user) {
-            return res.status(404).json({ msg: "User not found." });
-        }
-
-        const filledUser = await User.update(
-            {
-                firstName,
-                lastName,
+                // email,
                 address1,
                 address2,
                 phone1,
@@ -246,10 +196,10 @@ const fillUser = async (req, res) => {
             },
             { where: { id } }
         );
-        const userAccount = await UserAccount.findOne({ where: { id } });
-        userAccount.isFirst = false;
-        await userAccount.save();
-        res.status(200).json({ msg: "Successfully filled.", filledUser });
+
+        const updatedUser = await User.findOne({ where: { id } });
+
+        res.status(200).json({ msg: "Successfully.", updatedUser });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -257,7 +207,9 @@ const fillUser = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const { key } = req.params;
+        const { key } = req.query;
+
+        console.log(key);
 
         const searchedService = await ServiceProvider.findAll({
             where: {
@@ -285,7 +237,6 @@ module.exports = {
     signup,
     signin,
     signout,
-    fillUser,
     updateUser,
     search,
 };

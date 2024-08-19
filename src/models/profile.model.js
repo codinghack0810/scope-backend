@@ -17,19 +17,19 @@ module.exports = (sequelize, Sequelize) => {
             onDelete: "CASCADE",
         },
         rating: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
+            type: Sequelize.FLOAT,
+            defaultValue: 0,
         },
         comment: {
-            type: Sequelize.TEXT,
-            allowNull: false,
+            type: Sequelize.STRING,
+            defaultValue: "",
         },
         userFeedback: {
-            type: Sequelize.TEXT,
+            type: Sequelize.STRING,
             defaultValue: "",
         },
         serviceFeedback: {
-            type: Sequelize.TEXT,
+            type: Sequelize.STRING,
             defaultValue: "",
         },
     });

@@ -19,7 +19,6 @@ module.exports = (sequelize, Sequelize) => {
                 model: "user_accounts",
                 key: "id",
             },
-            allowNull: false,
             onDelete: "CASCADE",
         },
         service: {
@@ -28,7 +27,6 @@ module.exports = (sequelize, Sequelize) => {
                 model: "service_providers",
                 key: "id",
             },
-            allowNull: false,
             onDelete: "CASCADE",
         },
         status: {
