@@ -5,6 +5,7 @@ const db = require("../models");
 const User = db.user;
 const UserAccount = db.useraccount;
 const ServiceProvider = db.serviceprovider;
+const Profile = db.profile;
 
 const SecurityOfKey = process.env.JWT_ACCESS_TOKEN_SECRET_PRIVATE;
 // const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES;
@@ -232,6 +233,15 @@ const search = async (req, res) => {
     }
 };
 
+const allServices = async (req, res) => {
+    try {
+        const services = await ServiceProvider.findAll({});
+        res.status(200).json({ msg: "Successfully all search.", services });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
+
 module.exports = {
     test,
     signup,
@@ -239,4 +249,5 @@ module.exports = {
     signout,
     updateUser,
     search,
+    allServices,
 };

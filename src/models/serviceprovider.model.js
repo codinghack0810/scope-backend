@@ -16,11 +16,16 @@ module.exports = (sequelize, Sequelize) => {
         },
         areaOfOperation: {
             type: Sequelize.TEXT,
-            allowNull: false,
+            defaultValue: "",
+            // allowNull: false,
         },
         servicesProvided: {
             type: Sequelize.TEXT,
             allowNull: false,
+        },
+        rating: {
+            type: Sequelize.FLOAT,
+            defaultValue: 0,
         },
         contactInfo: {
             type: Sequelize.STRING,
