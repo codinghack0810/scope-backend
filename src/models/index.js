@@ -30,4 +30,25 @@ db.profile = require("./profile.model.js")(sequelize, Sequelize);
 db.review = require("./review.model.js")(sequelize, Sequelize);
 db.transaction = require("./transaction.model.js")(sequelize, Sequelize);
 
+db.useraccount.hasOne(db.user, { foreignKey: "id" });
+db.user.belongsTo(db.useraccount, { foreignKey: "id" });
+
+db.useraccount.hasMany(db.profile, { foreginKey: "userId" });
+db.profile.belongsTo(db.useraccount, { foreginKey: "userId" });
+
+db.useraccount.hasMany(db.review, { foreginKey: "userId" });
+db.review.belongsTo(db.useraccount, { foreginKey: "userId" });
+
+db.useraccount.hasMany(db.transaction, { foreginKey: "userId" });
+db.transaction.belongsTo(db.useraccount, { foreginKey: "userId" });
+
+db.serviceprovider.hasMany(db.profile, { foreginKey: "serviceId" });
+db.profile.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+
+db.serviceprovider.hasMany(db.review, { foreginKey: "serviceId" });
+db.review.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+
+db.serviceprovider.hasMany(db.transaction, { foreginKey: "serviceId" });
+db.transaction.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+
 module.exports = db;

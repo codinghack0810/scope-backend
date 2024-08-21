@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Profile = sequelize.define("profile", {
-        service: {
+        serviceId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "service_providers",
@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: "CASCADE",
         },
-        user: {
+        userId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "user_accounts",

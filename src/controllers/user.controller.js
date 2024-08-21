@@ -14,7 +14,7 @@ const test = async (req, res) => {
     await res.status(200).json({ msg: "User is running" });
 };
 
-// POST /signup
+//* POST /signup
 const signup = async (req, res) => {
     try {
         const {
@@ -70,7 +70,7 @@ const signup = async (req, res) => {
     }
 };
 
-// POST /signin
+//* POST /signin
 const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -81,6 +81,7 @@ const signin = async (req, res) => {
             return res.status(404).json({ msg: "User does not exist." });
         }
 
+        //TODO: use this
         // Check if the user is already logged in
         // if (userAccount.loginTracking) {
         //     return res.status(400).json({ msg: "User is already logged in." });
@@ -95,7 +96,15 @@ const signin = async (req, res) => {
             return res.status(400).json({ msg: "Password is incorrect." });
         }
 
+        //! remove this
         const user = await User.findOne({ where: { id: userAccount.id } });
+
+        //TODO: use this
+        // const user = await User.findOne({
+        //     // include: {model: UserAccount, as: "user_account", attributes: ["isFirst"]},
+        //     include: { model: UserAccount, attributes: ["isFirst"] },
+        //     where: { id: userAccount.id },
+        // });
 
         // Create JWT Payload
         const payload = {
@@ -119,7 +128,7 @@ const signin = async (req, res) => {
                     msg: "Successfully signed in.",
                     token,
                     user,
-                    isFirst,
+                    isFirst, //! remove this
                 });
             });
         });
@@ -128,7 +137,7 @@ const signin = async (req, res) => {
     }
 };
 
-// POST /signout
+//* POST /signout
 const signout = async (req, res) => {
     try {
         const userAccount = req.user;
@@ -141,7 +150,7 @@ const signout = async (req, res) => {
     }
 };
 
-// PUT /data
+//* PUT /data
 const updateUser = async (req, res) => {
     try {
         const userAccount = req.user;
@@ -150,7 +159,6 @@ const updateUser = async (req, res) => {
         const {
             firstName,
             lastName,
-            // email,
             address1,
             address2,
             phone1,
@@ -158,39 +166,19 @@ const updateUser = async (req, res) => {
             city,
             state,
             zip,
-            securityQuestion,
-            securityAnswer,
         } = req.body;
 
-        // if (email) {
-        //     // Check if the email is already taken
-        //     const emailTaken = await UserAccount.findOne({
-        //         where: { email },
-        //     });
-        //     if (emailTaken && emailTaken.id !== id) {
-        //         return res.status(400).json({ msg: "Email is already taken." });
-        //     }
-        // }
-
-        // Update the userAccount
-        await UserAccount.update(
-            {
-                // email,
-                securityQuestion,
-                securityAnswer,
-            },
-            { where: { id } }
-        );
-
-        userAccount.isFirst = false;
-        await userAccount.save();
+        // Check if the user exists
+        const user = await User.findOne({ where: { id } });
+        if (!user) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
 
         // Update the user
         await User.update(
             {
                 firstName,
                 lastName,
-                // email,
                 address1,
                 address2,
                 phone1,
@@ -210,12 +198,10 @@ const updateUser = async (req, res) => {
     }
 };
 
-// GET /search
+//* GET /search
 const search = async (req, res) => {
     try {
         const { key } = req.query;
-
-        console.log(key);
 
         const searchedService = await ServiceProvider.findAll({
             where: {
@@ -238,7 +224,7 @@ const search = async (req, res) => {
     }
 };
 
-// GET /all
+//* GET /all
 const allServices = async (req, res) => {
     try {
         const services = await ServiceProvider.findAll({});
@@ -248,7 +234,7 @@ const allServices = async (req, res) => {
     }
 };
 
-// GET /forgotpwd
+//* GET /forgotpwd
 const forgotPwd = async (req, res) => {
     try {
         const { email } = req.query;
@@ -265,7 +251,7 @@ const forgotPwd = async (req, res) => {
     }
 };
 
-// POST /forgotpwd
+//* POST /forgotpwd
 const forgotPwdAnswer = async (req, res) => {
     try {
         const { email, securityQuestion, securityAnswer } =
@@ -292,7 +278,7 @@ const forgotPwdAnswer = async (req, res) => {
     }
 };
 
-// PUT /forgotpwd
+//* PUT /forgotpwd
 const forgotPwdReset = async (req, res) => {
     try {
         const { email, password } = req.body;

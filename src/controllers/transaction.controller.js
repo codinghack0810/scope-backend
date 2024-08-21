@@ -30,7 +30,7 @@ const create = async (req, res) => {
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { content, user: userId, service: serviceId },
+            where: { content, userId: userId, serviceId: serviceId },
         });
         if (transaction) {
             return res.status(400).json({ msg: "Transaction already exists." });
@@ -40,8 +40,8 @@ const create = async (req, res) => {
         const newTransaction = await Transaction.create({
             content,
             amount,
-            user: userId,
-            service: serviceId,
+            userId: userId,
+            serviceId: serviceId,
         });
 
         res.status(201).json({
@@ -68,7 +68,7 @@ const update = async (req, res) => {
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { content, user: userId, service: serviceId },
+            where: { content, userId: userId, serviceId: serviceId },
         });
         if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found." });
@@ -101,7 +101,7 @@ const deleteTrans = async (req, res) => {
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { user: userId, service: serviceId },
+            where: { user: userId, serviceId: serviceId },
         });
         if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found." });

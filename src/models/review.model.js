@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        user: {
+        userId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "user_accounts",
@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             defaultValue: "",
         },
-        service: {
+        serviceId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "service_providers",

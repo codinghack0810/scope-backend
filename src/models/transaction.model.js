@@ -1,10 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const Transaction = sequelize.define("transaction", {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
         content: {
             type: Sequelize.TEXT,
             allowNull: false,
@@ -13,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.FLOAT,
             allowNull: false,
         },
-        user: {
+        userId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "user_accounts",
@@ -21,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             onDelete: "CASCADE",
         },
-        service: {
+        serviceId: {
             type: Sequelize.INTEGER,
             references: {
                 model: "service_providers",
