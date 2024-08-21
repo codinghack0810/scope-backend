@@ -13,5 +13,8 @@ router.post("/signout", requireAuth, userController.signout);
 router.put("/data", requireAuth, userController.updateUser);
 router.get("/search", requireAuth, userController.search);
 router.get("/all", requireAuth, userController.allServices);
+router.get("/forgotpwd", userController.forgotPwd);
+router.post("/forgotpwd", userController.forgotPwdAnswer);
+router.put("/forgotpwd", userController.forgotPwdReset);
 
 module.exports = router;

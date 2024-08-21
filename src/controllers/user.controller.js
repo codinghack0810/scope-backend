@@ -14,6 +14,7 @@ const test = async (req, res) => {
     await res.status(200).json({ msg: "User is running" });
 };
 
+// POST /signup
 const signup = async (req, res) => {
     try {
         const {
@@ -69,6 +70,7 @@ const signup = async (req, res) => {
     }
 };
 
+// POST /signin
 const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -126,6 +128,7 @@ const signin = async (req, res) => {
     }
 };
 
+// POST /signout
 const signout = async (req, res) => {
     try {
         const userAccount = req.user;
@@ -138,6 +141,7 @@ const signout = async (req, res) => {
     }
 };
 
+// PUT /data
 const updateUser = async (req, res) => {
     try {
         const userAccount = req.user;
@@ -206,6 +210,7 @@ const updateUser = async (req, res) => {
     }
 };
 
+// GET /search
 const search = async (req, res) => {
     try {
         const { key } = req.query;
@@ -233,10 +238,72 @@ const search = async (req, res) => {
     }
 };
 
+// GET /all
 const allServices = async (req, res) => {
     try {
         const services = await ServiceProvider.findAll({});
         res.status(200).json({ msg: "Successfully all search.", services });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
+
+// GET /forgotpwd
+const forgotPwd = async (req, res) => {
+    try {
+        const { email } = req.query;
+        const userAccount = await UserAccount.findOne({ where: { email } });
+        if (!userAccount) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
+        res.status(200).json({
+            msg: "Please input the answer.",
+            securityQuestion: userAccount.securityQuestion,
+        });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
+
+// POST /forgotpwd
+const forgotPwdAnswer = async (req, res) => {
+    try {
+        const { email, securityQuestion, securityAnswer } =
+            req.body;
+        const userAccount = await UserAccount.findOne({
+            where: { email, securityQuestion },
+        });
+        if (!userAccount) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
+
+        const secAnsMatch = await bcrypt.compare(
+            securityAnswer,
+            userAccount.securityAnswer
+        );
+        if (!secAnsMatch) {
+            return res
+                .status(400)
+                .json({ msg: "Security answer does not match." });
+        }
+        res.status(200).json({ msg: "User can reset password." });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
+
+// PUT /forgotpwd
+const forgotPwdReset = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const userAccount = await UserAccount.findOne({ where: { email } });
+        if (!userAccount) {
+            return res.status(404).json({ msg: "User does not exist." });
+        }
+        const newPasswordHash = await bcrypt.hash(password, 10);
+        userAccount.password = newPasswordHash;
+        await userAccount.save();
+        res.status(200).json({ msg: "Successfully reset password." });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -250,4 +317,7 @@ module.exports = {
     updateUser,
     search,
     allServices,
+    forgotPwd,
+    forgotPwdAnswer,
+    forgotPwdReset,
 };
