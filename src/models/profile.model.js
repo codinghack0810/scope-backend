@@ -1,20 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
     const Profile = sequelize.define("profile", {
-        serviceId: {
+        id: {
             type: Sequelize.INTEGER,
-            references: {
-                model: "service_providers",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            primaryKey: true,
+            autoIncrement: true,
         },
-        userId: {
+        userId: { // Separate foreign key for users
             type: Sequelize.INTEGER,
-            references: {
-                model: "user_accounts",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            allowNull: false, // Foreign key should not be null
+        },
+        serviceProviderId: { // Separate foreign key for service_providers
+            type: Sequelize.INTEGER,
+            allowNull: false, // Foreign key should not be null
         },
         rating: {
             type: Sequelize.FLOAT,

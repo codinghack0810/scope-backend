@@ -1,13 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("user", {
+    const User = sequelize.define("user", { // Use "user" for model name
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            references: {
-                model: "user_accounts",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            autoIncrement: true, // Auto-increment for primary key
+        },
+        userAccountId: { // Separate foreign key for user_accounts
+            type: Sequelize.INTEGER,
+            allowNull: false, // Foreign key should not be null
         },
         firstName: {
             type: Sequelize.STRING,
@@ -20,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
         email: {
             type: Sequelize.STRING,
             allowNull: false,
+            validate: {
+                isEmail: true, // Validate email format
+            },
         },
         address1: {
             type: Sequelize.TEXT,

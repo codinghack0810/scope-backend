@@ -30,25 +30,40 @@ db.profile = require("./profile.model.js")(sequelize, Sequelize);
 db.review = require("./review.model.js")(sequelize, Sequelize);
 db.transaction = require("./transaction.model.js")(sequelize, Sequelize);
 
-db.useraccount.hasOne(db.user, { foreignKey: "id" });
-db.user.belongsTo(db.useraccount, { foreignKey: "id" });
+db.useraccount.hasOne(db.user, { foreignKey: "userAccountId" });
+db.user.belongsTo(db.useraccount, {
+    foreignKey: "userAccountId",
+    onDelete: "CASCADE",
+});
 
-db.useraccount.hasMany(db.profile, { foreginKey: "userId" });
-db.profile.belongsTo(db.useraccount, { foreginKey: "userId" });
+db.user.hasMany(db.profile, { foreginKey: "userId" });
+db.profile.belongsTo(db.user, { foreginKey: "userId", onDelete: "CASCADE" });
 
-db.useraccount.hasMany(db.review, { foreginKey: "userId" });
-db.review.belongsTo(db.useraccount, { foreginKey: "userId" });
+db.user.hasMany(db.review, { foreginKey: "userId" });
+db.review.belongsTo(db.user, { foreginKey: "userId", onDelete: "CASCADE" });
 
-db.useraccount.hasMany(db.transaction, { foreginKey: "userId" });
-db.transaction.belongsTo(db.useraccount, { foreginKey: "userId" });
+db.user.hasMany(db.transaction, { foreginKey: "userId" });
+db.transaction.belongsTo(db.user, {
+    foreginKey: "userId",
+    onDelete: "CASCADE",
+});
 
-db.serviceprovider.hasMany(db.profile, { foreginKey: "serviceId" });
-db.profile.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+db.serviceprovider.hasMany(db.profile, { foreginKey: "serviceProviderId" });
+db.profile.belongsTo(db.serviceprovider, {
+    foreignKey: "serviceProviderId",
+    onDelete: "CASCADE",
+});
 
-db.serviceprovider.hasMany(db.review, { foreginKey: "serviceId" });
-db.review.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+db.serviceprovider.hasMany(db.review, { foreginKey: "serviceProviderId" });
+db.review.belongsTo(db.serviceprovider, {
+    foreignKey: "serviceProviderId",
+    onDelete: "CASCADE",
+});
 
-db.serviceprovider.hasMany(db.transaction, { foreginKey: "serviceId" });
-db.transaction.belongsTo(db.serviceprovider, { foreignKey: "serviceId" });
+db.serviceprovider.hasMany(db.transaction, { foreginKey: "serviceProviderId" });
+db.transaction.belongsTo(db.serviceprovider, {
+    foreignKey: "serviceProviderId",
+    onDelete: "CASCADE",
+});
 
 module.exports = db;

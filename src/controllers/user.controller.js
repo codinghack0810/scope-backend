@@ -31,6 +31,21 @@ const signup = async (req, res) => {
             securityAnswer,
         } = req.body;
 
+        if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !password ||
+            !address1 ||
+            !city ||
+            !state ||
+            !phone1 ||
+            !securityQuestion ||
+            !securityAnswer
+        ) {
+            return res.status(400).json({ msg: "Please fill all data." });
+        }
+
         const userAccount = await UserAccount.findOne({ where: { email } });
         if (userAccount) {
             if (userAccount.active !== 1) {
@@ -52,7 +67,7 @@ const signup = async (req, res) => {
 
         // Create the user
         await User.create({
-            id: newUserAccount.id,
+            userAccountId: newUserAccount.id,
             email: newUserAccount.email,
             firstName,
             lastName,
@@ -103,7 +118,7 @@ const signin = async (req, res) => {
         // const user = await User.findOne({
         //     // include: {model: UserAccount, as: "user_account", attributes: ["isFirst"]},
         //     include: { model: UserAccount, attributes: ["isFirst"] },
-        //     where: { id: userAccount.id },
+        //     where: { userAccountId: userAccount.id },
         // });
 
         // Create JWT Payload
@@ -115,10 +130,17 @@ const signin = async (req, res) => {
         userAccount.loginTracking = true;
         const isFirst = await userAccount.isFirst;
 
+        //! remove this
         // Check if the user is first time login
         if (isFirst) {
             userAccount.isFirst = false;
         }
+
+        //TODO: use this
+        // Check if the user is first time login
+        // if (userAccount.isFirst) {
+        //     userAccount.isFirst = false;
+        // }
 
         // Sign Token
         jwt.sign(payload, SecurityOfKey, (err, token) => {
@@ -169,7 +191,7 @@ const updateUser = async (req, res) => {
         } = req.body;
 
         // Check if the user exists
-        const user = await User.findOne({ where: { id } });
+        const user = await User.findOne({ where: { userAccountId: id } });
         if (!user) {
             return res.status(404).json({ msg: "User does not exist." });
         }
@@ -187,10 +209,12 @@ const updateUser = async (req, res) => {
                 state,
                 zip,
             },
-            { where: { id } }
+            { where: { userAccountId: id } }
         );
 
-        const updatedUser = await User.findOne({ where: { id } });
+        const updatedUser = await User.findOne({
+            where: { userAccountId: id },
+        });
 
         res.status(200).json({ msg: "Successfully.", updatedUser });
     } catch (error) {
@@ -254,8 +278,7 @@ const forgotPwd = async (req, res) => {
 //* POST /forgotpwd
 const forgotPwdAnswer = async (req, res) => {
     try {
-        const { email, securityQuestion, securityAnswer } =
-            req.body;
+        const { email, securityQuestion, securityAnswer } = req.body;
         const userAccount = await UserAccount.findOne({
             where: { email, securityQuestion },
         });

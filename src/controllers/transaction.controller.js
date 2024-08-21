@@ -1,7 +1,6 @@
 const db = require("../models");
 const Transaction = db.transaction;
 const User = db.user;
-const UserAccount = db.useraccount;
 const ServiceProvider = db.serviceprovider;
 
 const test = async (req, res) => {
@@ -14,8 +13,8 @@ const create = async (req, res) => {
         const { content, amount, service } = req.body;
 
         // Check if User exists
-        const userAccount = await UserAccount.findOne({ where: { id: userId } });
-        if (!userAccount) {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) {
             return res.status(404).json({ msg: "User not found." });
         }
 
@@ -26,11 +25,15 @@ const create = async (req, res) => {
         if (!serviceProvider) {
             return res.status(404).json({ msg: "ServiceProvider not found." });
         }
-        const serviceId = serviceProvider.id;
+        const serviceProviderId = serviceProvider.id;
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { content, userId: userId, serviceId: serviceId },
+            where: {
+                content,
+                userId: userId,
+                serviceProviderId: serviceProviderId,
+            },
         });
         if (transaction) {
             return res.status(400).json({ msg: "Transaction already exists." });
@@ -41,7 +44,7 @@ const create = async (req, res) => {
             content,
             amount,
             userId: userId,
-            serviceId: serviceId,
+            serviceProviderId: serviceProviderId,
         });
 
         res.status(201).json({
@@ -64,11 +67,15 @@ const update = async (req, res) => {
         if (!serviceProvider) {
             return res.status(404).json({ msg: "ServiceProvider not found." });
         }
-        const serviceId = serviceProvider.id;
+        const serviceProviderId = serviceProvider.id;
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { content, userId: userId, serviceId: serviceId },
+            where: {
+                content,
+                userId: userId,
+                serviceProviderId: serviceProviderId,
+            },
         });
         if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found." });
@@ -101,13 +108,13 @@ const deleteTrans = async (req, res) => {
 
         // Check if transaction exists
         const transaction = await Transaction.findOne({
-            where: { user: userId, serviceId: serviceId },
+            where: { user: userId, service: serviceId },
         });
         if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found." });
         }
 
-        if(transaction.status) {
+        if (transaction.status) {
             return res.status(400).json({ msg: "Transaction already paid." });
         }
 
@@ -130,7 +137,7 @@ const paid = async (req, res) => {
         if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found." });
         }
-        
+
         // Check if transaction is paid
         if (transaction.status) {
             return res.status(400).json({ msg: "Transaction already paid." });

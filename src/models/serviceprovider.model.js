@@ -12,11 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         address: {
             type: Sequelize.TEXT,
             allowNull: false,
-            // defaultValue: "",
         },
         areaOfOperation: {
             type: Sequelize.TEXT,
-            // defaultValue: "",
             allowNull: false,
         },
         servicesProvided: {

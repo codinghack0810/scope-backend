@@ -1,16 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
     const Review = sequelize.define("review", {
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
         job: {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        userId: {
+        userId: { // Separate foreign key for users
             type: Sequelize.INTEGER,
-            references: {
-                model: "user_accounts",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            allowNull: false, // Foreign key should not be null
         },
         userRating: {
             type: Sequelize.INTEGER,
@@ -20,13 +21,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             defaultValue: "",
         },
-        serviceId: {
+        serviceProviderId: { // Separate foreign key for service_providers
             type: Sequelize.INTEGER,
-            references: {
-                model: "service_providers",
-                key: "id",
-            },
-            onDelete: "CASCADE",
+            allowNull: false, // Foreign key should not be null
         },
         serviceRating: {
             type: Sequelize.INTEGER,
