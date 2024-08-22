@@ -5,6 +5,7 @@ dotenv.config();
 
 const UserAccount = db.useraccount;
 
+//* POST /verify
 const sendCode = async (req, res) => {
     try {
         const { email } = req.body;
@@ -58,6 +59,7 @@ const sendCode = async (req, res) => {
     }
 };
 
+//* PUT /verify
 const verifyCode = async (req, res) => {
     try {
         const { email, code } = req.body;
