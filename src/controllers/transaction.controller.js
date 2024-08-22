@@ -7,6 +7,7 @@ const test = async (req, res) => {
     await res.status(200).json({ msg: "Transaction is running." });
 };
 
+//* POST /create
 const create = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -56,6 +57,7 @@ const create = async (req, res) => {
     }
 };
 
+//* PUT /update
 const update = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -93,6 +95,7 @@ const update = async (req, res) => {
     }
 };
 
+//* DELETE /delete
 const deleteTrans = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -126,6 +129,7 @@ const deleteTrans = async (req, res) => {
     }
 };
 
+//* PUT /paid
 const paid = async (req, res) => {
     try {
         const { userId, serviceId } = req.params;
