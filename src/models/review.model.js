@@ -9,24 +9,26 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.TEXT,
             allowNull: false,
         },
-        userId: { // Separate foreign key for users
+        userId: {
+            // Separate foreign key for users
             type: Sequelize.INTEGER,
             allowNull: false, // Foreign key should not be null
         },
         userRating: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.FLOAT,
             defaultValue: 0,
         },
         userComment: {
             type: Sequelize.TEXT,
             defaultValue: "",
         },
-        serviceProviderId: { // Separate foreign key for service_providers
+        serviceProviderId: {
+            // Separate foreign key for service_providers
             type: Sequelize.INTEGER,
             allowNull: false, // Foreign key should not be null
         },
         serviceRating: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.FLOAT,
             defaultValue: 0,
         },
         serviceComment: {
