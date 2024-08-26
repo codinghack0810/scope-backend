@@ -63,6 +63,7 @@ const update = async (req, res) => {
         const userId = req.user.id;
         const { content, amount, service } = req.body;
 
+        // Check if ServiceProvider exists
         const serviceProvider = await ServiceProvider.findOne({
             where: { name: service },
         });
@@ -86,6 +87,7 @@ const update = async (req, res) => {
         // Update transaction
         transaction.amount = amount;
         await transaction.save();
+
         res.status(200).json({
             msg: "Transaction updated successfully.",
             transaction,
@@ -101,12 +103,14 @@ const deleteTrans = async (req, res) => {
         const userId = req.user.id;
         const { service } = req.body;
 
+        // Check if ServiceProvider exists
         const serviceProvider = await ServiceProvider.findOne({
             where: { name: service },
         });
         if (!serviceProvider) {
             return res.status(404).json({ msg: "ServiceProvider not found." });
         }
+
         const serviceId = serviceProvider.id;
 
         // Check if transaction exists
