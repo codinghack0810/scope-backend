@@ -22,13 +22,13 @@ db.sequelize.sync().then(() => {
     console.log("⏳ Database connected");
 });
 
-// db.sequelize.sync({ force: true }).then(() => {
-//     console.log("⏳ New Database connected");
-// });
-
-app.get("/", (req, res) => {
-    res.status(200).json("⏳ Server is running!");
+db.sequelize.sync({ force: true }).then(() => {
+    console.log("⏳ New Database connected");
 });
+
+// app.get("/", (req, res) => {
+//     res.status(200).json("⏳ Server is running!");
+// });
 
 app.use("/api/v1", routes);
 
