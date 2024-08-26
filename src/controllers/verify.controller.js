@@ -10,9 +10,8 @@ const sendCode = async (req, res) => {
     try {
         const { email } = req.body;
 
-        const userAccount = await UserAccount.findOne({ where: { email } });
-
         // Check if the user exists
+        const userAccount = await UserAccount.findOne({ where: { email } });
         if (!userAccount) {
             return res.status(404).json({ msg: "User did not signup. Please signup." });
         }
@@ -37,6 +36,8 @@ const sendCode = async (req, res) => {
                 pass: process.env.SMTP_PASSWORD,
             },
         });
+
+        // Defined transport object
         const mailOptions = {
             from: `${process.env.APP_NAME} <${process.env.EMAIL_FROM}>`,
             to: email,
@@ -47,6 +48,8 @@ const sendCode = async (req, res) => {
             <h1 style="padding: 12px; border-left: 4px solid #d0d0d0; font-style: italic;">${code}</h1>
             <p>Best wishes,<br>Scope Inc.</p>`,
         };
+
+        // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 res.status(500).json({ msg: error.message });

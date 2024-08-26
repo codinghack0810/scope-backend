@@ -227,6 +227,7 @@ const search = async (req, res) => {
     try {
         const { key } = req.query;
 
+        // Check if the service exists
         const searchedService = await ServiceProvider.findAll({
             where: {
                 servicesProvided: {
