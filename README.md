@@ -12,9 +12,11 @@ Run Command Prompt or Terminal in director of project.
 
 4. `npm start` or `yarn start`
 
-5. The server is running on http://localhost:5000
+5. Add the Service Provider in service-providers table.
 
-6. We get the url(https) for server from ngrok[https://dashboard.ngrok.com].
+6. The server is running on [http://localhost:5000]
 
-7. Final, we use this url for server.
-    ex: `https://singularly-hot-cod.ngrok-free.app` 
+7. We get the url(https) for server from ngrok[https://dashboard.ngrok.com].
+
+8. Final, we use this url for server.
+   ex: `https://singularly-hot-cod.ngrok-free.app`
