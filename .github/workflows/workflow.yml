@@ -1,0 +1,37 @@
+name: CI/CD Pipeline
+
+# Controls when the action will run. Triggers the workflow on push events but only for the main branch
+on:
+    push:
+        branches:
+            - main # Change this to your deployment branch
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            # Add additional steps here to install dependencies, run tests, etc.
+
+            - name: Deploy
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                  SSH_HOST: ${{ secrets.SSH_HOST }}
+                  SSH_USER: ${{ secrets.SSH_USER }}
+              run: |
+                  echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+                  mkdir -p ~/.ssh
+                  touch ~/.ssh/known_hosts
+                  ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+                  ssh $SSH_USER@$SSH_HOST << 'EOF'
+                    cd /path/to/your/application   # Change this to your application's path on the server
+                    git pull origin main           # Ensure you're pulling the right branch, e.g., `main`
+                    # Add commands to restart your service/application if necessary
+                    # Example for Node.js with PM2:
+                    npm install
+                    pm2 restart app_name
+                  EOF
