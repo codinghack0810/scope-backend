@@ -32,9 +32,9 @@ const HOST = process.env.HOST;
 // });
 
 // Force sync all models, which drops existing tables and re-creates them
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("⏳ New Database connected");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("⏳ New Database connected");
+// });
 
 // Basic route to verify that the server is running
 app.get("/", (req, res) => {
